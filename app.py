@@ -23,38 +23,41 @@ def handle_form_data():
     
     status = upload_data(request.form)
     
-    return render_template("index.html", status="The data was inserted!")
+    return render_template("index.html", status=status)
 
 
 # Helping functions
 # Uploading data to mongo
 def upload_data(form_data):
+    
+    # storing the form value into a dictionary
+    data_dict = {}
+    i = 0
+    for attribute in ATTRIBUTES:
+        data_dict[attribute] = dict(form_data.lists())['data'][i]
+        i += 1
+    
+    if data_dict["password"] != data_dict["confirm_password"]:
+        return "The passwords should match!"
+
     # Create a new client and connect to the server
-    # client = MongoClient(uri, server_api=ServerApi('1'))
+    client = MongoClient(uri, server_api=ServerApi('1'))
 
     # Trying to insert data
     try:
         # connecting to the specific database and collection
-        # database = client["Medtek"]
-        # collection = database["FormData"]
-        
-        # storing the form value into a dictionary
-        data_dict = {}
-        i = 0
-        for attribute in ATTRIBUTES:
-            data_dict[attribute] = dict(form_data.lists())['data'][i]
-            i += 1
+        database = client["Medtek"]
+        collection = database["FormData"]
 
         # Inserting one value
         status = None
-        if data_dict["password"] == data_dict["confirm_password"]:
-            del data_dict["confirm_password"]
-            # status = collection.insert_one(data_dict)
-        
-
+    
+        del data_dict["confirm_password"]
+        collection.insert_one(data_dict)
+        status = "The data was uploaded!"
 
         # Closing connection
-        # client.close()
+        client.close()
 
         # Returning status
         return status
