@@ -8,9 +8,8 @@ from hashlib import blake2s
 URI = "mongodb+srv://naivedya1:qwertyuioa123@cluster0.asq3g2k.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 ENCRYPTION_KEY = b"naivedyakhare"
 ATTRIBUTES = ["username", "email", "password", "confirm_password"]
-NUM_OF_ATTRIBUTES = len(ATTRIBUTES)
 
-
+# Creating app object
 app = Flask(__name__)
 
 # Index page
@@ -22,6 +21,7 @@ def home_page():
 @app.route("/form_data", methods = ["POST"])
 def handle_form_data():
     
+    # Using help function for data upload
     status = upload_data(request.form)
     
     return render_template("index.html", status=status)
@@ -32,10 +32,11 @@ def handle_form_data():
 def upload_data(form_data):
     
     # storing the form value into a dictionary
+    data_arr = dict(form_data.lists())["data"]
     data_dict = {}
     i = 0
     for attribute in ATTRIBUTES:
-        data_dict[attribute] = dict(form_data.lists())['data'][i]
+        data_dict[attribute] = data_arr[i]
         i += 1
     
     # Password Check 
@@ -48,6 +49,9 @@ def upload_data(form_data):
     # Hashing the password
     data_dict["password"] = blake2s(bytes(data_dict["password"], encoding="utf-8"), key=ENCRYPTION_KEY).digest()
     
+    # Removing confirm_password from dict
+    del data_dict["confirm_password"]
+
     # Create a new client and connect to the server
     client = MongoClient(URI, server_api=ServerApi('1'))
 
@@ -58,17 +62,13 @@ def upload_data(form_data):
         collection = database["FormData"]
 
         # Inserting one value
-        status = None
-
-        del data_dict["confirm_password"]
         collection.insert_one(data_dict)
-        status = "The data was uploaded!"
 
         # Closing connection
         client.close()
 
         # Returning status
-        return status
+        return "The data was uploaded!"
     
     except Exception as e:
         return e
