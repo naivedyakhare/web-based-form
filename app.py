@@ -5,11 +5,10 @@ from pymongo.server_api import ServerApi
 from hashlib import blake2s
 
 # GLOBAL VARIABLE
-uri = "mongodb+srv://naivedya1:qwertyuioa123@cluster0.asq3g2k.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+URI = "mongodb+srv://naivedya1:qwertyuioa123@cluster0.asq3g2k.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 ENCRYPTION_KEY = b"naivedyakhare"
 ATTRIBUTES = ["username", "email", "password", "confirm_password"]
 NUM_OF_ATTRIBUTES = len(ATTRIBUTES)
-
 
 
 app = Flask(__name__)
@@ -39,14 +38,18 @@ def upload_data(form_data):
         data_dict[attribute] = dict(form_data.lists())['data'][i]
         i += 1
     
+    # Password Check 
     if data_dict["password"] != data_dict["confirm_password"]:
         return "The passwords should match!"
+
+    # Converting email to lower
+    data_dict["email"] = data_dict["email"].lower()
 
     # Hashing the password
     data_dict["password"] = blake2s(bytes(data_dict["password"], encoding="utf-8"), key=ENCRYPTION_KEY).digest()
     
     # Create a new client and connect to the server
-    client = MongoClient(uri, server_api=ServerApi('1'))
+    client = MongoClient(URI, server_api=ServerApi('1'))
 
     # Trying to insert data
     try:
