@@ -2,9 +2,11 @@ from flask import Flask, render_template, url_for, request
 from dotenv import load_dotenv, find_dotenv
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
+from hashlib import blake2s
+
 # GLOBAL VARIABLE
 uri = "mongodb+srv://naivedya1:qwertyuioa123@cluster0.asq3g2k.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-
+ENCRYPTION_KEY = b"naivedyakhare"
 ATTRIBUTES = ["username", "email", "password", "confirm_password"]
 NUM_OF_ATTRIBUTES = len(ATTRIBUTES)
 
@@ -40,6 +42,9 @@ def upload_data(form_data):
     if data_dict["password"] != data_dict["confirm_password"]:
         return "The passwords should match!"
 
+    # Hashing the password
+    data_dict["password"] = blake2s(bytes(data_dict["password"], encoding="utf-8"), key=ENCRYPTION_KEY).digest()
+    
     # Create a new client and connect to the server
     client = MongoClient(uri, server_api=ServerApi('1'))
 
@@ -51,7 +56,7 @@ def upload_data(form_data):
 
         # Inserting one value
         status = None
-    
+
         del data_dict["confirm_password"]
         collection.insert_one(data_dict)
         status = "The data was uploaded!"
