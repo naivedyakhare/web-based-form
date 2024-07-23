@@ -1,78 +1,91 @@
-from flask import Flask, render_template, url_for, request
+from flask import Flask, render_template, url_for, request, redirect, jsonify, json
 from dotenv import load_dotenv, find_dotenv
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from hashlib import blake2s
+from models.profile import Profile
+from models.query import Query
 
 # GLOBAL VARIABLE
 URI = "mongodb+srv://naivedya1:qwertyuioa123@cluster0.asq3g2k.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 ENCRYPTION_KEY = b"naivedyakhare"
-ATTRIBUTES = ["username", "email", "password", "confirm_password"]
-
+USER = Profile()
+QUERY = Query()
 # Creating app object
 app = Flask(__name__)
 
-# Index page
-@app.route("/")
-def home_page():
-    return render_template("index.html")
 
-# Handling post request for form data
-@app.route("/form_data", methods = ["POST"])
-def handle_form_data():
+# ROUTING SECTION
+# Welcome Page
+@app.route("/")
+def render_index():
+    questions = create_questions()
+    return render_template("index.html", questions=questions)
+
+
+# Profile section
+@app.route("/profile", methods=["GET", "POST"])
+def render_profile():
+    if request.method == "GET":
+        return render_template("profile.html")
+    
+    if request.method == "POST":
+        handle_profile(request)
+        return redirect("/qna")
+
+
+# QnA section
+@app.route("/qna", methods = ["POST", "GET"])
+def render_qna():
     
     # Using help function for data upload
-    status = upload_data(request.form)
     
-    return render_template("index.html", status=status)
+    return render_template("qna.html")
 
 
-# Helping functions
-# Uploading data to mongo
-def upload_data(form_data):
-    
-    # storing the form value into a dictionary
-    data_arr = dict(form_data.lists())["data"]
-    data_dict = {}
-    i = 0
-    for attribute in ATTRIBUTES:
-        data_dict[attribute] = data_arr[i]
-        i += 1
-    
-    # Password Check 
-    if data_dict["password"] != data_dict["confirm_password"]:
-        return "The passwords should match!"
+#####################################################################################
+# HELPING FUNCTIONS
+# Uploading personal information to mongoDB
+def handle_profile(request):
+    global USER
+    form_data = request.form
 
-    # Converting email to lower
-    data_dict["email"] = data_dict["email"].lower()
-
-    # Hashing the password
-    data_dict["password"] = blake2s(bytes(data_dict["password"], encoding="utf-8"), key=ENCRYPTION_KEY).digest()
-    
-    # Removing confirm_password from dict
-    del data_dict["confirm_password"]
-
-    # Create a new client and connect to the server
     client = MongoClient(URI, server_api=ServerApi('1'))
-
-    # Trying to insert data
-    try:
-        # connecting to the specific database and collection
-        database = client["Medtek"]
-        collection = database["FormData"]
-
-        # Inserting one value
-        collection.insert_one(data_dict)
-
-        # Closing connection
-        client.close()
-
-        # Returning status
-        return "The data was uploaded!"
     
-    except Exception as e:
-        return e
+    database = client["Medtek"]
+    collection = database["FormData"]
+    
+    name = form_data.get("name")
+    email = form_data.get("email")
+    gender = form_data.get("gender")
+    qna = {}
+    exists = False
 
+    search = QUERY.search_profile(email=email)
+    update = QUERY.update_profile(name=name, gender=gender, email=email)
+
+    mongo_data = collection.find_one(search)
+
+    if mongo_data != None:
+        collection.update_many(search, update)
+        qna = mongo_data["data"]["QnA"]
+        exists = True
+    
+    create_local_profile(name=name, email=email, gender=gender, qna=qna, exists=exists)
+    
+    return 
+
+
+def create_local_profile(name, email, gender, qna, exists):
+    USER.set_profile(name=name, email=email, gender=gender, exists=exists)
+    USER.set_qna(qna)
+
+
+def create_questions():
+    
+    with open("./static/data/questions.txt") as f:
+        questions = f.read().split("\n")
+    return questions
 
 
 if __name__ == "__main__":

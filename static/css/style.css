@@ -1,134 +1,160 @@
 /* reset style */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Poppins", sans-serif;
-  }
-  
-  body {
-    height: 100vh;
-    padding: 0 24px;
-    display: grid;
-    place-items: center;
-       background: rgb(2,0,36);
-      background: -moz-linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 41%, rgba(0,212,255,1) 100%);
-      background: -webkit-linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 41%, rgba(0,212,255,1) 100%);
-      background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 41%, rgba(0,212,255,1) 100%);
-      filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#020024",endColorstr="#00d4ff",GradientType=1);
-  }
-  
-  .sign-up-form {
-    min-width: 500px;
-    max-width: 850px;
-    width: 100%;
-    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-    border-radius: 12px;
-    background-color: #fff;
-    display: flex;
-    flex-direction: column;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
 }
-  
-  
-  /* Form Content */
-  .form-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 32px;
-  }
-  
-  /* Heading */
-  .form-heading {
-    text-align: center;
-    margin-bottom: 32px;
-  }
-  
-  .form-heading h1 {
-    font-size: 24px;
-    font-weight: 500;
-  }
-  
-  .form-heading p {
-    font-size: 13px;
-      padding:10px 5px;
-  }
-  
-  /* fields */
-  .input-wrap {
-    display: flex;
-    flex-direction: column;
-    gap: 48px;
-    width: 100%;
-  }
-  
-  .input {
-    display: flex;
-    flex-direction: column;
-    position: relative;
+
+body {
+  height: 100vh;
+  padding: 0 24px;
+  display: grid;
+  place-items: center;
+  background: rgb(2, 0, 36);
+  background: -moz-linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(9, 9, 121, 1) 41%, rgba(0, 212, 255, 1) 100%);
+  background: -webkit-linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(9, 9, 121, 1) 41%, rgba(0, 212, 255, 1) 100%);
+  background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(9, 9, 121, 1) 41%, rgba(0, 212, 255, 1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#020024", endColorstr="#00d4ff", GradientType=1);
+}
+
+.sign-up-form {
+  min-width: 500px;
+  max-width: 850px;
+  width: 100%;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  border-radius: 12px;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* Form Content */
+.form-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px;
+}
+
+/* Heading */
+.form-heading {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.form-heading h1 {
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.form-heading p {
+  font-size: 13px;
+  padding: 10px 5px;
+}
+
+/* fields */
+.input-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  width: 100%;
+}
+
+.input {
+  display: flex;
+  flex-direction: column;
+  position: relative;
 }
 
 input {
-    width: 100%;
-    padding: 8px 0;
-    border: none;
-    border-bottom: 1px solid #181824;
-    transition: 300ms;
-    font-size: 14px;
-    font-weight: 300;
-  }
-  
-  input:focus {
-    outline: none;
-    box-shadow: 0 1px 0 0 #6236ff;
-    border-color: #6236ff;
-  }
-  
-  .label {
-    display: flex;
-    position: absolute;
-    height: 100%;
-    align-items: center;
-    transition: 300ms ease;
-  }
-  
-  label {
-    display: block;
-    font-size: 14px;
-    color: #b0b0b0;
-  }
-  
-  /* Label Effect */
-  input:focus + .label,
-  input:not(:placeholder-shown) + .label {
-    transform: translateY(-27px);
-  }
-  
-  input:focus + .label label,
-  input:not(:placeholder-shown) + .label label {
-    font-weight: 500;
-    color: initial;
-  }
-  
-  .submit span{
-    padding-left: 40px;
-    color: red;
-    font-weight: bolder;
-  }
-  button {
-    padding: 12px 18px;
-    border: 2px solid #6236ff;
-    align-self: flex-start;
-    background-color: #6236ff;
-    color: #fff;
-    border-radius: 12px;
-    transition: 300ms;
-    font-weight: bolder;
-  }
-  
-  button:hover {
-    cursor: pointer;
-    background-color: #f1f1f1;
-    color: #6236ff;
-    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  }
+  width: 100%;
+  padding: 8px 0;
+  border: none;
+  border-bottom: 1px solid #181824;
+  transition: 300ms;
+  font-size: 14px;
+  font-weight: 300;
+}
+
+input:focus {
+  outline: none;
+  box-shadow: 0 1px 0 0 #6236ff;
+  border-color: #6236ff;
+}
+
+.label {
+  display: flex;
+  position: absolute;
+  height: 100%;
+  align-items: center;
+  transition: 300ms ease;
+}
+
+label {
+  display: block;
+  font-size: 14px;
+  color: #b0b0b0;
+}
+
+/* Label Effect */
+input:focus+.label,
+input:not(:placeholder-shown)+.label {
+  transform: translateY(-27px);
+}
+
+input:focus+.label label,
+input:not(:placeholder-shown)+.label label {
+  font-weight: 500;
+  color: initial;
+}
+
+.submit {
+  align-self: flex-end;
+}
+
+.submit span {
+  padding-left: 40px;
+  color: red;
+  font-weight: bolder;
+}
+
+button {
+  padding: 12px 18px;
+  border: 2px solid #6236ff;
+  align-self: flex-start;
+  background-color: #6236ff;
+  color: #fff;
+  border-radius: 12px;
+  transition: 300ms;
+  font-weight: bolder;
+}
+
+button:hover {
+  cursor: pointer;
+  background-color: #f1f1f1;
+  color: #6236ff;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+
+.radio {
+  display: inline-flex;
+  align-items: center;
+}
+
+.radio-input {
+  margin: 0 0.5em 0;
+}
+
+table tr td:nth-child(1) {
+  padding-left: 20px;
+  font-size: 15px;
+  color: grey;
+}
+
+table tr td:nth-child(2) {
+  padding-left: 20px;
+}
+
